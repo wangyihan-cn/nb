@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打字机效果</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .typing-container {
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .typed-text {
+            white-space: pre-wrap;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 0;
+            color: #495057;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            color: #007bff;
+            font-weight: 700;
+        }
+
+        .container h2 {
+            font-size: 1.6em;
+            color: #0056b3;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .container p {
+            font-size: 1.1em;
+            color: #343a40;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: auto;
+            padding: 15px 0;
+            background-color: #ffffff;
+            box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #personal-info {
+            font-size: 1.3em;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #007bff; }
+        }
+
+        .typing-animation {
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 2px solid #007bff;
+            animation: typing 8s steps(40, end), blink-caret 0.75s step-end infinite;
+            font-size: 1.2em;
+            margin: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .typed-text {
+                font-size: 1em;
+            }
+
+            header h1, .container h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="typing-container" id="typing-content">
+        <div id="personal-info" class="typed-text typing-animation"></div>
+
+        <header>
+            <h1 id="header-text" class="typed-text typing-animation"></h1>
+        </header>
+
+        <div class="container">
+            <h2 id="subheader1-text" class="typed-text typing-animation"></h2>
+            <p id="para1-text" class="typed-text typing-animation"></p>
+
+            <h2 id="subheader2-text" class="typed-text typing-animation"></h2>
+            <p id="para2-text" class="typed-text typing-animation"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 《朝花夕拾》：父亲的病. 版权所有.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const texts = {
+                'personal-info': '小组成员：陈佳，李牧耕，张诗晗，于复瑄，曹誉瑶，王义涵',
+                'header-text': '《朝花夕拾》：父亲的病',
+                'subheader1-text': '背景介绍',
+                'para1-text': `《朝花夕拾》是鲁迅先生创作的一部散文集，收录了鲁迅对自己童年和青少年时代的回忆。
+其中的《父亲的病》一篇，详细描述了鲁迅的父亲鲁尚文晚年的疾病状况以及家庭应对这一困境的经历。
+这篇文章不仅反映了个人家庭生活的困境，也揭示了当时社会的种种问题。`,
+                'subheader2-text': '概括内容',
+                'para2-text': `在《父亲的病》中，鲁迅回顾了父亲晚年因病痛苦的经历，描述了家庭为了应对经济压力和医疗开支所作的努力。
+鲁迅的父亲在病重时，家里经济条件非常困难，家庭成员不得不忍受种种困扰。
+在文章中，鲁迅通过细腻的笔触表达了对父亲的深切关爱，以及对社会医疗条件的不满和对个人命运的无奈。`
+            };
+
+            function typeText(id, text, callback) {
+                const element = document.getElementById(id);
+                let index = 0;
+                element.textContent = ''; // 清空文本
+
+                function type() {
+                    if (index < text.length) {
+                        element.textContent += text.charAt(index);
+                        index++;
+                        setTimeout(type, 50); // 调整打字速度
+                    } else if (callback) {
+                        callback();
+                    }
+                }
+
+                type();
+            }
+
+            function showPersonalInfo() {
+                const personalInfo = document.getElementById('personal-info');
+                personalInfo.style.display = 'block'; // 显示个人信息
+                typeText('personal-info', texts['personal-info'], () => {
+                    setTimeout(() => {
+                        personalInfo.style.display = 'none'; // 隐藏个人信息
+                        typeNext();
+                    }, 10000); // 显示10秒
+                });
+            }
+
+            function typeNext() {
+                const keys = Object.keys(texts);
+                let i = 1; // 从 header-text 开始
+
+                function typeItem() {
+                    if (i < keys.length) {
+                        typeText(keys[i], texts[keys[i]], () => {
+                            i++;
+                            setTimeout(typeItem, 500); // 每部分间隔500毫秒
+                        });
+                    }
+                }
+
+                typeItem();
+            }
+
+            showPersonalInfo(); // 显示个人信息并开始打字效果
+        });
+    </script>
+</body>
+</html>
